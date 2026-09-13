@@ -8,45 +8,59 @@ int main() {
     int a, b;
     printf("Введите HEX числа [num1 num2]: ");
     int iseof = input_check(&a, &b);
+    int start = a/16, end = b/16;
     if (iseof == EOF) return 0;
     printf("\"..\" используется для непечатаемых символов\n");
-    printf("HEX CHAR\n");
-    for (int i = a; i <= b; i++) {
-        switch(i) {
-            case 0:
-                printf("%-3x \\0\n", i);
-                break;
-            case 7:
-                printf("%-3x \\a\n", i);
-                break;
-            case 8:
-                printf("%-3x \\b\n", i);
-                break;
-            case 9:
-                printf("%-3x \\t\n", i);
-                break;
-            case 10:
-                printf("%-3x \\n\n", i);
-                break;
-            case 11:
-                printf("%-3x \\v\n", i);
-                break;
-            case 12:
-                printf("%-3x \\f\n", i);
-                break;
-            case 13:
-                printf("%-3x \\r\n", i);
-                break;
-            case 27:
-                printf("%-3x \\e\n", i);
-                break;
-            default:
-                if (i > 31 && i < 127) {
-                    printf("%-3x %c\n", i, i);
-                } else {
-                    printf("%-3x ..\n", i);
-                }
+    printf("\n    ");
+    for (int i = 0; i < 16; i++) {
+        printf("%-3x", i);
+    }
+    printf("\n");
+    for (int i = start; i <= end; i++) {
+        printf("%xx  ", i);
+        for (int j = 0; j < 16; j++) {
+            int chr = i * 16 + j;
+            if (chr < a || chr > b) {
+                printf("   ");
+                continue;
+            }
+            switch(chr) {
+                case 0:
+                    printf("%-3s", "\\0");
+                    break;
+                case 7:
+                    printf("%-3s", "\\a");
+                    break;
+                case 8:
+                    printf("%-3s", "\\b");
+                    break;
+                case 9:
+                    printf("%-3s", "\\t");
+                    break;
+                case 10:
+                    printf("%-3s", "\\n");
+                    break;
+                case 11:
+                    printf("%-3s", "\\v");
+                    break;
+                case 12:
+                    printf("%-3s", "\\f");
+                    break;
+                case 13:
+                    printf("%-3s", "\\r");
+                    break;
+                case 27:
+                    printf("%-3s", "\\e");
+                    break;
+                default:
+                    if (chr > 31 && chr < 127) {
+                        printf("%-3c", chr);
+                    } else {
+                        printf("%-3s", "..");
+                    }
+            }
         }
+        printf("\n");
     }
 
     return 0;
