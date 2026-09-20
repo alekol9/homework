@@ -3,27 +3,30 @@
 
 
 int main() {
-    int correct = 123, attempts = 3, code, flag = 0;
+    const char *correct = "123";
+    char code[5];
+    int attempts = 3, flag = 0;
 
     for (int i = 1; i <= attempts; i++) {
         printf("Введите код: ");
-        scanf("%d", &code);
+        scanf("%4s", code);
         if (check(code, correct) == 1) {
             flag = 1;
             break;
         } else {
             if ((attempts- i) != 0) printf("Неверный код. Попробуйте снова (попыток осталось %d). ", attempts-i);
-            fprintf(stderr, "Попытка %d: Введён неверный код\n", i);
+            LWRN("Введён неверный код\n", i);
+            clean_buff();
         }
     }
 
     if (flag == 1) {
         printf("GRANTED\n");
-        fprintf(stderr, "Успешный вход\n\n");
+        LINF("Успешный вход\n\n");
         return 0;
     } else {
         printf("DENIED\n");
-        fprintf(stderr, "Вход не совершён\n\n");
+        LERR("Вход не совершён\n\n");
         return 1;
     }
 }
