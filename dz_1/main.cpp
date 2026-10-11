@@ -76,9 +76,17 @@ AlgComplex operator*(const Complex& num1, const Complex& num2) { //(a + bi)(c + 
     return AlgComplex(num1.real() * num2.real() - num1.imag() * num2.imag(), num1.real() * num2.imag() + num1.imag() * num2.real());
 }
 
+TrigComplex operator*(const TrigComplex& num1, const TrigComplex& num2) {
+    return TrigComplex(num1.abs() * num2.abs(), num1.arg() + num2.arg());
+}
+
 AlgComplex operator/(const Complex& num1, const Complex& num2) { //(a + bi)/(c + di) = ((ac + bd) + (bc - ad)i)/(c^2+d^2)
     return AlgComplex((num1.real() * num2.real() + num1.imag() * num2.imag())/(num2.imag()*num2.imag() + num2.real()*num2.real()), \
     (num1.imag() * num2.real() - num1.real() * num2.imag())/(num2.imag()*num2.imag() + num2.real()*num2.real()));
+}
+
+TrigComplex operator/(const TrigComplex& num1, const TrigComplex& num2) {
+    return TrigComplex(num1.abs() / num2.abs(), num1.arg() - num2.arg());
 }
 
 AlgComplex operator*(double k, const Complex& num) {
