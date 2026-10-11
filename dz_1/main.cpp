@@ -11,6 +11,8 @@ class Complex {
     virtual double arg() const = 0;
     virtual double abs() const = 0;
 
+    virtual ostream& operator<<(ostream& os) const = 0; 
+
     virtual ~Complex() = default;
 };
 
@@ -32,6 +34,10 @@ public:
     double abs() const override {
         return std::sqrt(re * re + im * im);
     }
+
+    ostream& operator<<(ostream& os) const override {
+        return os << re << (im >= 0 ? " + " : " - ") << std::abs(im) << "i";
+    }
 };
 
 class TrigComplex : public Complex {
@@ -51,6 +57,10 @@ class TrigComplex : public Complex {
     }
     double abs() const override {
         return r;
+    }
+
+    ostream& operator<<(ostream& os) const override {
+        return os << r << " * (cos(" << phi << ") + i * sin(" << phi << "))";
     }
 };
 
@@ -98,7 +108,7 @@ Roots solve(const Complex& A, const Complex& B, const Complex& C) {
 };
 
 ostream& operator<<(ostream& os, const Complex& num) {
-    return os << num.real() << (num.imag() >= 0 ? " + " : " - ") << std::abs(num.imag()) << "i";;
+    return num.operator<<(os);
 }
 
 int main() {
