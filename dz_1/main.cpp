@@ -15,10 +15,10 @@ class Complex {
 };
 
 class AlgComplex : public Complex {
-    private:
+private:
     double re, im;
-    public:
-    AlgComplex(double re, double im) : re(re), im(im) {}
+public:
+    AlgComplex(double re = 0, double im = 0) : re(re), im(im) {}
 
     double real() const override {
         return re;
@@ -38,7 +38,7 @@ class TrigComplex : public Complex {
     private:
     double r, phi;
     public:
-    TrigComplex(double r, double phi) : r(r), phi(phi) {}
+    TrigComplex(double r = 0, double phi = 0) : r(r), phi(phi) {}
 
     double real() const override {
         return r*std::cos(phi);
@@ -56,24 +56,24 @@ class TrigComplex : public Complex {
 
 AlgComplex operator+(const Complex& num1, const Complex& num2) {
     return AlgComplex(num1.real() + num2.real(), num1.imag() + num2.imag());
-};
+}
 
 AlgComplex operator-(const Complex& num1, const Complex& num2) {
     return AlgComplex(num1.real() - num2.real(), num1.imag() - num2.imag());
-};
+}
 
 AlgComplex operator*(const Complex& num1, const Complex& num2) { //(a + bi)(c + di) = (ac - bd) + (ad + bc)i
     return AlgComplex(num1.real() * num2.real() - num1.imag() * num2.imag(), num1.real() * num2.imag() + num1.imag() * num2.real());
-};
+}
 
 AlgComplex operator/(const Complex& num1, const Complex& num2) { //(a + bi)/(c + di) = ((ac + bd) + (bc - ad)i)/(c^2+d^2)
     return AlgComplex((num1.real() * num2.real() + num1.imag() * num2.imag())/(num2.imag()*num2.imag() + num2.real()*num2.real()), \
     (num1.imag() * num2.real() - num1.real() * num2.imag())/(num2.imag()*num2.imag() + num2.real()*num2.real()));
-};
+}
 
 AlgComplex operator*(double k, const Complex& num) {
     return AlgComplex(k * num.real(), k * num.imag());
-};
+}
 
 AlgComplex operator-(const Complex& num) {
     return AlgComplex(-num.real(), -num.imag());
@@ -91,20 +91,19 @@ Roots solve(const Complex& A, const Complex& B, const Complex& C) {
     AlgComplex D = B * B - 4. * A * C;
     TrigComplex sqrt_D = sqrt_complex(D);
 
-    AlgComplex A_2 = 2. *  A;
-    AlgComplex x1 = (-B + sqrt_D) / A_2;
-    AlgComplex x2 = (-B - sqrt_D) / A_2;
+    AlgComplex x1 = (-B + sqrt_D) / (A + A);
+    AlgComplex x2 = (-B - sqrt_D) / (A + A);
 
     return {x1, x2};
 };
 
 ostream& operator<<(ostream& os, const Complex& num) {
     return os << num.real() << (num.imag() >= 0 ? " + " : " - ") << std::abs(num.imag()) << "i";;
-};
+}
 
 int main() {
     AlgComplex a(1, 8);
-    AlgComplex b(20, 0);
+    AlgComplex b(20);
     TrigComplex c(2., M_PI/3.);
     TrigComplex d(1., M_PI/6.);
 
