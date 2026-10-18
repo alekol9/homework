@@ -128,19 +128,19 @@ TEST(BookingTest, CarrierRejectionDoesNotNotify) {
 
 //ДЗ
 
-TEST(RegularCustomerTest, Test1) {
+TEST(RegularCustomerTest, RegularLocalThresholdIsFree) {
     DeliveryPolicy policy;
     Shipment shipmment{300000, 1000, Zone::Local, Customer::Regular};
     EXPECT_EQ(policy.quote(shipmment), 0);
 }
 
-TEST(RegularCustomerTest, Test2) {
+TEST(RegularCustomerTest, RegularLocalHasBaseFee) {
     DeliveryPolicy policy;
     Shipment shipmment{299999, 1000, Zone::Local, Customer::Regular};
     EXPECT_EQ(policy.quote(shipmment), 30000);
 }
 
-TEST(RegularCustomerTest, Test3) {
+TEST(RegularCustomerTest, RegularRemoteHasReducedFee) {
     DeliveryPolicy policy;
     Shipment shipmment{1000000, 1000, Zone::Remote, Customer::Regular};
     EXPECT_EQ(policy.quote(shipmment), 50000);

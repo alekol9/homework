@@ -37,6 +37,8 @@ public:
     Cents quote(const Shipment& s) const {
         if (s.subtotal < 0) throw std::invalid_argument("Negative order subtotal!");
         if (s.mass < 1 || s.mass > 20000) throw std::invalid_argument("Weight is out of range!");
+        if (s.zone == Zone::Local && s.type == Customer::Regular && s.subtotal >= 300000) return 0;
+        if (s.zone == Zone::Remote && s.type == Customer::Regular) return 50000;
         if (s.zone == Zone::Remote) return 70000;
         if (s.subtotal >= 500000) return 0;
         return 30000;
