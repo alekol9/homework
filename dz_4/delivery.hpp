@@ -36,12 +36,27 @@ class DeliveryPolicy {
 public:
     Cents quote(const Shipment& s) const {
         if (s.subtotal < 0) throw std::invalid_argument("Negative order subtotal!");
-        if (s.mass < 1 || s.mass > 20000) throw std::invalid_argument("Weight is out of range!");
-        if (s.zone == Zone::Local && s.type == Customer::Regular && s.subtotal >= 300000) return 0;
-        if (s.zone == Zone::Remote && s.type == Customer::Regular) return 50000;
-        if (s.zone == Zone::Remote) return 70000;
-        if (s.subtotal >= 500000) return 0;
-        return 30000;
+        if (s.mass < 1 || s.mass > 50000) throw std::invalid_argument("Weight is out of range!");
+
+        Cents fee{};
+        if (s.zone == Zone::Local) {
+            Cents base = (s.type == Customer::Regular) ? 300000 : 500000;
+            if (s.subtotal < base) {
+                fee = 30000;
+            }
+            if (s.mass > 20000) {
+                Grams blocks_of_5kg = (s.mass - 20000) / 5000 + 1;
+                fee += blocks_of_5kg * 100000;
+            }
+        } else {
+            fee = (s.type == Customer::Regular) ? 50000 : 70000;
+            if (s.mass > 20000) {
+                Grams blocks_of_1kg = (s.mass - 20000) / 1000 + 1;
+                fee += blocks_of_1kg * 30000;
+            }
+        }
+
+        return fee;
     }
 };
 
