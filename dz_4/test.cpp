@@ -145,3 +145,39 @@ TEST(RegularCustomerTest, RegularRemoteHasReducedFee) {
     Shipment shipmment{1000000, 1000, Zone::Remote, Customer::Regular};
     EXPECT_EQ(policy.quote(shipmment), 50000);
 }
+
+
+struct MassCase {
+    const char* name;
+    Zone zone;
+    Grams mass;
+    Cents expected;
+};
+
+class MassMatrixTest : public ::testing::TestWithParam<MassCase> {};
+
+TEST_P(MassMatrixTest, FollowsRules) {
+    DeliveryPolicy policy;
+    const auto& p = GetParam();
+    EXPECT_EQ(policy.quote(Shipment{100000, p.mass, p.zone}), p.expected);
+}
+
+const MassCase mass_cases[] = {
+    {"LocalMass20000", Zone::Local, 20000, 30000},
+    {"LocalMass20001", Zone::Local, 20001, 130000},
+    {"LocalMass25000", Zone::Local, 25000, 230000},
+    {"LocalMass40000", Zone::Local, 40000, 530000},
+    {"LocalMass45000", Zone::Local, 45000, 630000},
+    {"LocalMass49999", Zone::Local, 49999, 730000},
+    {"LocalMaxMass50000", Zone::Local, 50000, 730000},
+    {"RemoteMass20000", Zone::Remote, 20000, 70000},
+    {"RemoteMass20001", Zone::Remote, 20001, 100000},
+    {"RemoteMass21000", Zone::Remote, 21000, 100000},
+    {"RemoteMass21001", Zone::Remote, 21001, 130000},
+    {"RemoteMass49999", Zone::Remote, 49999, 940000},
+    {"RemoteMaxMass50000", Zone::Remote, 50000, 970000},
+};
+
+INSTANTIATE_TEST_SUITE_P(Mass, MassMatrixTest, ::testing::ValuesIn(mass_cases), [](const ::testing::TestParamInfo<MassCase>& info) {
+    return std::string{info.param.name};
+});
