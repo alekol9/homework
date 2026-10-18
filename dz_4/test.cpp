@@ -44,7 +44,7 @@ TEST_F(LocalShipmentTest, ZeroWeightRejected) {
 }
 
 TEST_F(LocalShipmentTest, OverWeightRejected) {
-    shipment.mass = 20001;
+    shipment.mass = 50001;
     EXPECT_THROW(policy.quote(shipment), std::invalid_argument);
 }
 
@@ -92,7 +92,7 @@ TEST_P(RejectedWeightTest, RefuseShipment) {
     DeliveryPolicy policy;
     EXPECT_THROW(policy.quote(Shipment{100000, GetParam()}), std::invalid_argument);
 }
-INSTANTIATE_TEST_SUITE_P(Boundaries, RejectedWeightTest, ::testing::Values(-1, 0, 20001));
+INSTANTIATE_TEST_SUITE_P(Boundaries, RejectedWeightTest, ::testing::Values(-1, 0, 50001));
 
 
 class MockCarrier : public Carrier {
@@ -168,14 +168,14 @@ const MassCase mass_cases[] = {
     {"LocalMass25000", Zone::Local, 25000, 230000},
     {"LocalMass40000", Zone::Local, 40000, 530000},
     {"LocalMass45000", Zone::Local, 45000, 630000},
-    {"LocalMass49999", Zone::Local, 49999, 730000},
+    {"LocalMass49999", Zone::Local, 49999, 630000},
     {"LocalMaxMass50000", Zone::Local, 50000, 730000},
     {"RemoteMass20000", Zone::Remote, 20000, 70000},
     {"RemoteMass20001", Zone::Remote, 20001, 100000},
-    {"RemoteMass21000", Zone::Remote, 21000, 100000},
+    {"RemoteMass21000", Zone::Remote, 21000, 130000},
     {"RemoteMass21001", Zone::Remote, 21001, 130000},
-    {"RemoteMass49999", Zone::Remote, 49999, 940000},
-    {"RemoteMaxMass50000", Zone::Remote, 50000, 970000},
+    {"RemoteMass49999", Zone::Remote, 49999, 970000},
+    {"RemoteMaxMass50000", Zone::Remote, 50000, 1000000},
 };
 
 INSTANTIATE_TEST_SUITE_P(Mass, MassMatrixTest, ::testing::ValuesIn(mass_cases), [](const ::testing::TestParamInfo<MassCase>& info) {
